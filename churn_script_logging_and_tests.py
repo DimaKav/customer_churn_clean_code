@@ -1,3 +1,5 @@
+"This module tests and executes the functions in churn_library.py"
+
 import os
 import logging
 import churn_library as cl
@@ -39,31 +41,46 @@ def test_eda(perform_eda):
         assert 'Churn' in df.columns
         assert list(df['Churn'].unique()) == [0,1]
     except AssertionError as err:
-        logging.error("Testing test_eda: column named 'Churn' is not in the df, it must be in the dataframe, and must be either 0 or 1 to perform EDA")
+        logging.error("Testing perform_eda: column named 'Churn' is not in the df,\
+                      it must be in the dataframe, and must be either 0 or 1 to perform EDA")
         raise err
-    
+
     try:
-        assert os.path.isfile('images/eda/churn.png')
-        assert os.path.isfile('images/eda/customer_age.png')
-        assert os.path.isfile('images/eda/marital_status.png')
-        assert os.path.isfile('images/eda/total_trans_ct.png')
-        assert os.path.isfile('images/eda/heatmap.png')
+        files = ['churn_distribution.png','customer_age_distribution.png','heatmap.png',
+                 'marital_status_distribution.png','total_transaction_distribution.png']
+        for file in files:
+            assert os.path.isfile('images/eda/' + file)
         logging.info("Testing test_eda: SUCCESS")
     except AssertionError as err:
-        logging.error("Testing test_eda: churn.png, customer_age.png, marital_status.png, total_trans_ct.png, heatmap.png must all be in the images/eda directory")
-        
+        logging.error("Testing perform_eda:\
+                      some or all of the following files are not in images/eda dir:%s",file)
 
-def test_classification_report_image(classification_report_image):
+def test_classification_report_image():
     '''
     test classification report function
     '''
-    
-    
-def test_feature_importance_plot(feature_impotance_plot):
+    try:
+        df = cl.import_data("./data/bank_data.csv")
+        cl.classification_report_image(df)
+        files = ["logistics_results.png","rf_results.png","roc_curve_result.png"]
+        for file in files:
+            assert os.path.isfile('images/results/' + file)
+        logging.info("Testing classification_report_image: SUCCESS")
+    except AssertionError as err:
+        logging.error("Testing classification_report_image:\
+                      some or all of the following files are not in images/results dir:%s",files)
+
+def test_feature_importance_plot(feature_importance_plot):
     '''
     test feature importance plot
     '''
-        
+    try:
+        assert os.path.isfile('images/results/feature_importance_plot.png')
+        logging.info("Testing feature_impotance_plot: SUCCESS")
+    except AssertionError as err:
+        logging.error("Testing feature_impotance_plot: feature_importance_plot.png\
+                      is not in the images/results dir")
+
 def test_encoder_helper(encoder_helper):
     '''
     test encoder helper
@@ -73,7 +90,7 @@ def test_encoder_helper(encoder_helper):
     'Education_Level',
     'Marital_Status',
     'Income_Category',
-    'Card_Category'                
+    'Card_Category'
     ]
     try:
         df = cl.import_data("./data/bank_data.csv")
@@ -82,22 +99,15 @@ def test_encoder_helper(encoder_helper):
         expected_cols = ['Gender_Churn','Education_Level_Churn','Marital_Status_Churn',
                          'Income_Category_Churn','Card_Category_Churn']
         assert all(i in cols for i in expected_cols)
-        logging.info("Testing test_encoder_helper: SUCCESS")
+        logging.info("Testing encoder_helper: SUCCESS")
     except AssertionError as err:
-        logging.error(f"Testing encoder_helper: missing some or all of these columns are missing:{expected_cols}")
-
+        logging.error("Testing encoder_helper:\
+                      missing some or all of these columns are missing:%s",expected_cols)
 
 def test_perform_feature_engineering(perform_feature_engineering):
     '''
     test perform_feature_engineering
     '''
-    keep_cols = ['Customer_Age', 'Dependent_count', 'Months_on_book',
-             'Total_Relationship_Count', 'Months_Inactive_12_mon',
-             'Contacts_Count_12_mon', 'Credit_Limit', 'Total_Revolving_Bal',
-             'Avg_Open_To_Buy', 'Total_Amt_Chng_Q4_Q1', 'Total_Trans_Amt',
-             'Total_Trans_Ct', 'Total_Ct_Chng_Q4_Q1', 'Avg_Utilization_Ratio',
-             'Gender_Churn', 'Education_Level_Churn', 'Marital_Status_Churn', 
-             'Income_Category_Churn', 'Card_Category_Churn']
     try:
         df = cl.import_data("./data/bank_data.csv")
         X_train, X_test, y_train, y_test = perform_feature_engineering(df)
@@ -105,10 +115,10 @@ def test_perform_feature_engineering(perform_feature_engineering):
         assert X_test.shape[1] == 19
         assert list(y_train.unique()) == [0,1]
         assert list(y_test.unique()) == [0,1]
-        logging.info("Testing test_perform_feature_engineering: SUCCESS")
+        logging.info("Testing perform_feature_engineering: SUCCESS")
     except AssertionError as err:
-        logging.error("Testing test_perform_feature_engineering: there must be 19 features and the target column must contain either 0 or 1")
-        
+        logging.error("Testing perform_feature_engineering:\
+                      there must be 19 features and the target column must contain either 0 or 1")
 
 def test_train_models(train_models):
     '''
@@ -122,8 +132,14 @@ def test_train_models(train_models):
         assert os.path.isfile('models/logistic_model.pkl')
         logging.info("Testing test_train_models: SUCCESS")
     except AssertionError as err:
-        logging.error("Testing train_models: rfc_model.pkl and logistic_model.pkl must be in the models dir")
+        logging.error("Testing train_models:\
+                      rfc_model.pkl and logistic_model.pkl must be in the models dir")
 
 
 if __name__ == "__main__":
+    test_import(cl.import_data)
+    test_eda(cl.perform_eda)
+    test_classification_report_image()
+    test_encoder_helper(cl.encoder_helper)
+    test_perform_feature_engineering(cl.perform_feature_engineering)
     test_train_models(cl.train_models)
