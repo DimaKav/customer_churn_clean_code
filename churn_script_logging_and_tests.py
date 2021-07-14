@@ -1,4 +1,8 @@
-"This module tests and executes the functions in churn_library.py"
+"""
+This module tests and executes the functions in churn_library.py
+Author: Dmitriy K.
+Created: 6/10/20
+"""
 
 import os
 import logging
