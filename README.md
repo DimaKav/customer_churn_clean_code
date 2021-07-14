@@ -1,6 +1,6 @@
 # Predict Customer Churn
 
-A machine learning project that follows coding (PEP8) and engineering best practices.
+A basic MLOps system that follows coding (PEP8) and engineering best practices.
 
 ## Purpose
 
