@@ -39,7 +39,11 @@ Run `ipython churn_script_logging_and_tests.py` to test each function in churn_l
 
 ## Dependencies
 joblib to save trained models
+
 pandas for data organizing and processing
+
 matplotlib for visualizations
+
 seaborn for heatmap visualiation
+
 sklearn for training and diagnosing the models
