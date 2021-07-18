@@ -46,4 +46,4 @@ matplotlib for visualizations
 
 seaborn for heatmap visualiation
 
-sklearn for training and diagnosing the models
+scikit-learn for training and diagnosing the models
