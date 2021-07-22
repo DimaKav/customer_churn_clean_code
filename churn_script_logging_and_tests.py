@@ -139,7 +139,6 @@ def test_train_models(train_models):
         logging.error("Testing train_models:\
                       rfc_model.pkl and logistic_model.pkl must be in the models dir")
 
-
 if __name__ == "__main__":
     test_import(cl.import_data)
     test_eda(cl.perform_eda)
